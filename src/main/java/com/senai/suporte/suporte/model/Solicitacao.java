@@ -2,16 +2,48 @@ package com.senai.suporte.suporte.model;
 
 import java.util.Objects;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+@Entity
+@Table(name = "solicitacao")
 public class Solicitacao {
 
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "NIF é obrigatorio")
+    @Column(nullable = false)
     private String nif;
+
+    @NotBlank(message = "Nome do solicitante é obrigatorio")
+    @Size(min = 3, max = 100, message = "Nome deve ter entre 3 e 100 caracteres")
+    @Column (nullable = false)
     private String nomeSolicitante;
+
+    @NotBlank(message = "O número da sala é obrigatorio")
+    @Column (nullable = false)
     private String numeroSala;
+
+    @NotBlank(message = "O código do patrimonio é obrigatorio")
+    @Column (nullable = false)
     private String codigoPatrimonio;
+
+    @NotBlank(message = "A descrição é obrigatorio")
+    @Column (nullable = false)
     private String descricaoProblema;
+
+    @NotBlank(message = "O tipo de problema é obrigatório")
+    @Enumerated(EnumType.STRING)
+    @Column (nullable = false)
     private String tipoProblema;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column (nullable = false, length = 20)
     private StatusSolicitacao status = StatusSolicitacao.PENDENTE;
 
 /*===============

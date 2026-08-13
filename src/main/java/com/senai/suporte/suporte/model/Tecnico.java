@@ -2,14 +2,41 @@ package com.senai.suporte.suporte.model;
 
 import java.util.Objects;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+@Entity
+@Table(name = "tecnicos")
 public class Tecnico {
+
+    //============================
+    //     Chave Primaria
+    //============================
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(min = 3, max = 100, message = "Nome deve conter entre 3 a 100 caracteres")
+    @Column(nullable = false)
     private String nome;
+
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Informe um e-mail válido")
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @NotBlank(message = "Senha é obrigatório")
+    @Size(message = "A senha deve ser de 6 caracteres")
+    @Column(nullable = false)
     private String Senha;
 
     public Tecnico() {
     }
+
 
     public Long getId() {
         return id;

@@ -2,12 +2,33 @@ package com.senai.suporte.suporte.model;
 
 import java.util.Objects;
 
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+
+import jakarta.annotation.Generated;
+import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+
+@Entity
+@Table(name = "painel tecnico")
+
 public class PainelTecnico {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "solicitacao_id", nullable = false, unique = true)
     private Solicitacao solicitacao;
+
+    @NotBlank(message = "Nome do tecnico é obragatório")
+    @Column(nullable = false)
     private String tecnicoResponsavel;
-    private String Observacoes;
+
+    @Column(columnDefinition = "TEXT")
+    private String observacoes;
 
 	/* ===================
 	 * metodo construtor
@@ -45,11 +66,11 @@ public class PainelTecnico {
     }
 
     public String getObservacoes() {
-        return Observacoes;
+        return observacoes;
     }
 
     public void setObservacoes(String observacoes) {
-        Observacoes = observacoes;
+        observacoes = observacoes;
     }
 
     /*=============================================================

@@ -13,6 +13,6 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long >
     List<Solicitacao> findByTipoProblema(TipoProblema tipoPoblema);
     List<Solicitacao> findByStatusAndTipoProblema(StatusSolicitacao status, TipoProblema tipoProblema);
 
-    @Query("SELECT s FROM Solicitacao s WHERE LOWER(s.nomeSolicitacao) LIKE LOWER(CONCAT('%', :nome, '%'))")
+    @Query("SELECT s FROM Solicitacao s WHERE LOWER(s.nomeSolicitante) LIKE LOWER(CONCAT('%', :nome, '%'))")
     List<Solicitacao> buscarPorNome(@Param("nome") String nome);
 }
