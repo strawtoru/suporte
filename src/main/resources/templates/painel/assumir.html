@@ -1,10 +1,331 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Assumir Chamado — SENAI Suporte</title>
+
+    <meta
+            name="description"
+            content="Assuma a responsabilidade por este chamado de suporte."
+    >
+
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
 </head>
+
 <body>
+
+<nav class="navbar">
+    <a class="navbar-brand" th:href="@{/painel}">
+        <div class="navbar-logo">S</div>
+
+        <div class="navbar-name">
+            <span>SENAI</span> Suporte
+            <small>Painel do Técnico</small>
+        </div>
+    </a>
+
+    <ul class="navbar-nav">
+        <li>
+            <a th:href="@{/painel}">
+                📋 Chamados
+            </a>
+        </li>
+
+        <li class="navbar-divider"></li>
+
+        <li>
+            <span class="navbar-user">
+                <span class="navbar-user-dot"></span>
+
+                <span sec:authentication="name">
+                    Técnico
+                </span>
+            </span>
+        </li>
+
+        <li>
+            <form
+                    th:action="@{/logout}"
+                    method="post"
+                    style="display: inline;"
+            >
+                <input
+                        type="hidden"
+                        th:name="${_csrf.parameterName}"
+                        th:value="${_csrf.token}"
+                >
+
+                <button
+                        type="submit"
+                        class="btn btn-ghost btn-sm"
+                >
+                    Sair 🚪
+                </button>
+            </form>
+        </li>
+    </ul>
+</nav>
+
+<div class="page-md">
+
+    <div class="page-header anim-fade-up">
+        <div class="page-header-left">
+
+            <div class="breadcrumb">
+                <a th:href="@{/}">
+                    Início
+                </a>
+
+                <span class="breadcrumb-sep">/</span>
+
+                <a th:href="@{/painel}">
+                    Painel
+                </a>
+
+                <span class="breadcrumb-sep">/</span>
+
+                <span>Assumir Chamado</span>
+            </div>
+
+            <h1 class="page-title">
+                Assumir Chamado
+            </h1>
+
+            <p class="page-subtitle">
+                Confirme que você está assumindo a responsabilidade
+                por este chamado.
+            </p>
+
+        </div>
+    </div>
+
+    <div class="card mb-2 anim-fade-up delay-1">
+
+        <div class="card-header">
+            <div class="card-header-left">
+
+                <div class="card-icon blue">
+                    📋
+                </div>
+
+                <div>
+                    <div class="card-title">
+                        Chamado
+
+                        <span th:text="'#' + ${solicitacao.id}">
+                            #1
+                        </span>
+                    </div>
+
+                    <div class="card-subtitle">
+                        Detalhes da solicitação
+                    </div>
+                </div>
+
+            </div>
+
+            <span class="badge badge-pendente">
+                ⏳ Pendente
+            </span>
+        </div>
+
+        <div class="card-body">
+
+            <div class="detail-grid">
+
+                <div class="detail-item">
+                    <div class="detail-label">NIF</div>
+
+                    <div
+                            class="detail-value"
+                            th:text="${solicitacao.nif}"
+                    >
+                        12345
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Solicitante</div>
+
+                    <div
+                            class="detail-value"
+                            th:text="${solicitacao.nomeSolicitante}"
+                    >
+                        Nome
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Sala</div>
+
+                    <div
+                            class="detail-value"
+                            th:text="${solicitacao.numeroSala}"
+                    >
+                        101
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Patrimônio</div>
+
+                    <div
+                            class="detail-value"
+                            th:text="${solicitacao.codigoPatrimonio}"
+                    >
+                        PAT-001
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Tipo</div>
+
+                    <div
+                            class="detail-value"
+                            th:text="${solicitacao.tipoProblema.descricao}"
+                    >
+                        Tipo
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="detail-item">
+                <div class="detail-label">
+                    Descrição do Problema
+                </div>
+
+                <div
+                        class="detail-value"
+                        style="line-height: 1.65;"
+                        th:text="${solicitacao.descricaoProblema}"
+                >
+                    Descrição detalhada do problema relatado.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card anim-fade-up delay-2">
+
+        <div class="card-header">
+            <div class="card-header-left">
+
+                <div class="card-icon red">
+                    🙋
+                </div>
+
+                <div>
+                    <div class="card-title">
+                        Registro de Atendimento
+                    </div>
+
+                    <div class="card-subtitle">
+                        Confirme seu nome e adicione observações iniciais
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <form
+                    th:action="@{/painel/assumir/{id}(id=${solicitacao.id})}"
+                    method="post"
+                    id="form-assumir"
+            >
+
+                <input
+                        type="hidden"
+                        th:name="${_csrf.parameterName}"
+                        th:value="${_csrf.token}"
+                >
+
+                <div class="form-group">
+                    <label
+                            class="form-label"
+                            for="tecnicoResponsavel"
+                    >
+                        Técnico Responsável
+                        <span class="req">*</span>
+                    </label>
+
+                    <input
+                            type="text"
+                            id="tecnicoResponsavel"
+                            class="form-control"
+                            th:value="${tecnicoLogado}"
+                            placeholder="Seu nome"
+                            readonly
+                    >
+
+                    <div class="form-hint">
+                        Seu nome será registrado como responsável pelo chamado.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label
+                            class="form-label"
+                            for="observacoes"
+                    >
+                        Observações Iniciais
+                    </label>
+
+                    <textarea
+                            id="observacoes"
+                            name="observacoes"
+                            class="form-control"
+                            rows="4"
+                            placeholder="Registre observações iniciais, diagnóstico preliminar ou qualquer informação relevante…"
+                    ></textarea>
+
+                    <div class="form-hint">
+                        Campo opcional — você poderá editar depois.
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="card-footer">
+
+            <a
+                    th:href="@{/painel}"
+                    class="btn btn-ghost"
+                    id="btn-cancelar-assumir"
+            >
+                Cancelar
+            </a>
+
+            <button
+                    type="submit"
+                    form="form-assumir"
+                    class="btn btn-accent btn-lg"
+                    id="btn-confirmar-assumir"
+            >
+                🙋 Confirmar e Assumir Chamado
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    <strong>SENAI</strong> Suporte &mdash;
+    Painel do Técnico &copy; 2026
+</footer>
 
 </body>
 </html>

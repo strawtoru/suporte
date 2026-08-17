@@ -1,10 +1,233 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Chamado — SENAI Suporte</title>
+    <meta name="description" content="Edite os dados de um chamado de suporte.">
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
 </head>
 <body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <a class="navbar-brand" th:href="@{/painel}">
+        <div class="navbar-logo">S</div>
+        <div class="navbar-name">
+            <span>SENAI</span> Suporte
+            <small>Painel do Técnico</small>
+        </div>
+    </a>
+    <ul class="navbar-nav">
+        <li><a th:href="@{/painel}">📋 Chamados</a></li>
+        <li class="navbar-divider"></li>
+        <li>
+            <span class="navbar-user">
+                <span class="navbar-user-dot"></span>
+                <span sec:authentication="name">Técnico</span>
+            </span>
+        </li>
+        <li>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-ghost btn-sm">Sair 🚪</button>
+            </form>
+        </li>
+    </ul>
+</nav>
+
+<!-- CONTEÚDO -->
+<div class="page-md">
+
+    <!-- CABEÇALHO -->
+    <div class="page-header anim-fade-up">
+        <div class="page-header-left">
+            <div class="breadcrumb">
+                <a th:href="@{/}">Início</a>
+                <span class="breadcrumb-sep">/</span>
+                <a th:href="@{/painel}">Painel</a>
+                <span class="breadcrumb-sep">/</span>
+                <span>Editar Chamado</span>
+            </div>
+            <h1 class="page-title">
+                Editar Chamado
+                <span class="text-muted" style="font-size: 1.2rem; font-weight: 400;"
+                      th:text="'#' + ${solicitacao.id}">#1</span>
+            </h1>
+            <p class="page-subtitle">Atualize as informações da solicitação abaixo.</p>
+        </div>
+    </div>
+
+    <!-- CARD DO FORMULÁRIO -->
+    <div class="card anim-fade-up delay-1">
+
+        <div class="card-header">
+            <div class="card-header-left">
+                <div class="card-icon blue">✏️</div>
+                <div>
+                    <div class="card-title">Informações da Solicitação</div>
+                    <div class="card-subtitle">Todos os campos com * são obrigatórios</div>
+                </div>
+            </div>
+            <!-- Status atual -->
+            <span th:if="${solicitacao.status.name() == 'PENDENTE'}"    class="badge badge-pendente">⏳ Pendente</span>
+            <span th:if="${solicitacao.status.name() == 'EM_ANDAMENTO'}" class="badge badge-andamento">🔧 Em Andamento</span>
+            <span th:if="${solicitacao.status.name() == 'CONCLUIDO'}"   class="badge badge-concluido">✅ Concluído</span>
+        </div>
+
+        <div class="card-body card-body-lg">
+            <form
+                th:action="@{/painel/editar/{id}(id=${solicitacao.id})}"
+                th:object="${solicitacao}"
+                method="post"
+                id="form-editar"
+                novalidate
+            >
+                <!-- CSRF -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <!-- ID oculto para garantir que a entidade seja corretamente identificada -->
+                <input type="hidden" th:field="*{id}" />
+
+                <!-- NIF e Nome -->
+                <div class="form-row mb-2">
+                    <div class="form-group mb-0">
+                        <label class="form-label" for="nif">NIF <span class="req">*</span></label>
+                        <input
+                            type="text"
+                            id="nif"
+                            class="form-control"
+                            th:field="*{nif}"
+                            th:classappend="${#fields.hasErrors('nif')} ? 'is-invalid' : ''"
+                            placeholder="Ex: 12345678"
+                        >
+                        <div th:if="${#fields.hasErrors('nif')}" class="form-error">
+                            ⚠ <span th:errors="*{nif}">NIF inválido</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label class="form-label" for="nomeSolicitante">Nome do Solicitante <span class="req">*</span></label>
+                        <input
+                            type="text"
+                            id="nomeSolicitante"
+                            class="form-control"
+                            th:field="*{nomeSolicitante}"
+                            th:classappend="${#fields.hasErrors('nomeSolicitante')} ? 'is-invalid' : ''"
+                            placeholder="Nome completo"
+                        >
+                        <div th:if="${#fields.hasErrors('nomeSolicitante')}" class="form-error">
+                            ⚠ <span th:errors="*{nomeSolicitante}">Nome inválido</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sala e Patrimônio -->
+                <div class="form-row mb-2">
+                    <div class="form-group mb-0">
+                        <label class="form-label" for="numeroSala">Número da Sala <span class="req">*</span></label>
+                        <input
+                            type="text"
+                            id="numeroSala"
+                            class="form-control"
+                            th:field="*{numeroSala}"
+                            th:classappend="${#fields.hasErrors('numeroSala')} ? 'is-invalid' : ''"
+                            placeholder="Ex: 101"
+                        >
+                        <div th:if="${#fields.hasErrors('numeroSala')}" class="form-error">
+                            ⚠ <span th:errors="*{numeroSala}">Sala inválida</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label class="form-label" for="codigoPatrimonio">Código do Patrimônio <span class="req">*</span></label>
+                        <input
+                            type="text"
+                            id="codigoPatrimonio"
+                            class="form-control"
+                            th:field="*{codigoPatrimonio}"
+                            th:classappend="${#fields.hasErrors('codigoPatrimonio')} ? 'is-invalid' : ''"
+                            placeholder="Ex: PAT-00123"
+                        >
+                        <div th:if="${#fields.hasErrors('codigoPatrimonio')}" class="form-error">
+                            ⚠ <span th:errors="*{codigoPatrimonio}">Código inválido</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tipo e Status -->
+                <div class="form-row mb-2">
+                    <div class="form-group mb-0">
+                        <label class="form-label" for="tipoProblema">Tipo do Problema <span class="req">*</span></label>
+                        <select
+                            id="tipoProblema"
+                            class="form-control"
+                            th:field="*{tipoProblema}"
+                            th:classappend="${#fields.hasErrors('tipoProblema')} ? 'is-invalid' : ''"
+                        >
+                            <option value="">Selecione o tipo…</option>
+                            <option th:each="tipo : ${tipos}"
+                                    th:value="${tipo.name()}"
+                                    th:text="${tipo.descricao}">
+                                Tipo
+                            </option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('tipoProblema')}" class="form-error">
+                            ⚠ <span th:errors="*{tipoProblema}">Tipo inválido</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label class="form-label" for="status">Status <span class="req">*</span></label>
+                        <select
+                            id="status"
+                            class="form-control"
+                            th:field="*{status}"
+                        >
+                            <option th:each="s : ${statusList}"
+                                    th:value="${s.name()}"
+                                    th:text="${s.descricao}">
+                                Status
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Descrição -->
+                <div class="form-group">
+                    <label class="form-label" for="descricaoProblema">Descrição do Problema <span class="req">*</span></label>
+                    <textarea
+                        id="descricaoProblema"
+                        class="form-control"
+                        th:field="*{descricaoProblema}"
+                        th:classappend="${#fields.hasErrors('descricaoProblema')} ? 'is-invalid' : ''"
+                        rows="5"
+                        placeholder="Descrição detalhada do problema…"
+                    ></textarea>
+                    <div th:if="${#fields.hasErrors('descricaoProblema')}" class="form-error">
+                        ⚠ <span th:errors="*{descricaoProblema}">Descrição inválida</span>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="card-footer">
+            <a th:href="@{/painel}" class="btn btn-ghost" id="btn-cancelar-editar">Cancelar</a>
+            <button type="submit" form="form-editar" class="btn btn-secondary btn-lg" id="btn-salvar-edicao">
+                💾 Salvar Alterações
+            </button>
+        </div>
+
+    </div><!-- /card -->
+
+</div><!-- /page -->
+
+<!-- FOOTER -->
+<footer>
+    <strong>SENAI</strong> Suporte &mdash; Painel do Técnico &copy; 2026
+</footer>
 
 </body>
 </html>

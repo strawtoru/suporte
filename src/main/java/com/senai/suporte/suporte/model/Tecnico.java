@@ -11,32 +11,31 @@ import jakarta.validation.constraints.Size;
 @Table(name = "tecnicos")
 public class Tecnico {
 
-    //============================
-    //     Chave Primaria
-    //============================
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Nome é obrigatório")
-    @Size(min = 3, max = 100, message = "Nome deve conter entre 3 a 100 caracteres")
+    @Size(min = 3, max = 100,
+            message = "Nome deve conter entre 3 e 100 caracteres")
     @Column(nullable = false)
     private String nome;
 
-    @NotBlank(message = "Email é obrigatório")
+    @NotBlank(message = "E-mail é obrigatório")
     @Email(message = "Informe um e-mail válido")
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "Senha é obrigatório")
-    @Size(message = "A senha deve ser de 6 caracteres")
+    // Agora a validação realmente exige pelo menos 6 caracteres.
+    @NotBlank(message = "Senha é obrigatória")
+    @Size(min = 6,
+            message = "A senha deve conter pelo menos 6 caracteres")
     @Column(nullable = false)
-    private String Senha;
+    private String senha;
 
+    // O JPA precisa de um construtor vazio.
     public Tecnico() {
     }
-
 
     public Long getId() {
         return id;
@@ -63,19 +62,23 @@ public class Tecnico {
     }
 
     public String getSenha() {
-        return Senha;
+        return senha;
     }
 
     public void setSenha(String senha) {
-        Senha = senha;
+        this.senha = senha;
     }
 
     @Override
     public boolean equals(Object o) {
-        if(this == o)
+        if (this == o) {
             return true;
-        if(o == null || getClass()!= o.getClass())
+        }
+
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
+
         Tecnico tecnico = (Tecnico) o;
         return id != null && id.equals(tecnico.id);
     }

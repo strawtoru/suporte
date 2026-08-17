@@ -4,71 +4,56 @@ import java.util.Objects;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "solicitacao")
 public class Solicitacao {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "NIF é obrigatorio")
+    @NotBlank(message = "NIF é obrigatório")
     @Column(nullable = false)
     private String nif;
 
-    @NotBlank(message = "Nome do solicitante é obrigatorio")
-    @Size(min = 3, max = 100, message = "Nome deve ter entre 3 e 100 caracteres")
-    @Column (nullable = false)
+    @NotBlank(message = "Nome do solicitante é obrigatório")
+    @Size(min = 3, max = 100,
+            message = "Nome deve ter entre 3 e 100 caracteres")
+    @Column(nullable = false)
     private String nomeSolicitante;
 
-    @NotBlank(message = "O número da sala é obrigatorio")
-    @Column (nullable = false)
+    @NotBlank(message = "O número da sala é obrigatório")
+    @Column(nullable = false)
     private String numeroSala;
 
-    @NotBlank(message = "O código do patrimonio é obrigatorio")
-    @Column (nullable = false)
+    @NotBlank(message = "O código do patrimônio é obrigatório")
+    @Column(nullable = false)
     private String codigoPatrimonio;
 
-    @NotBlank(message = "A descrição é obrigatorio")
-    @Column (nullable = false)
+    @NotBlank(message = "A descrição é obrigatória")
+    @Column(nullable = false)
     private String descricaoProblema;
 
-    @NotBlank(message = "O tipo de problema é obrigatório")
+    // Como TipoProblema é um enum, usamos @NotNull em vez de @NotBlank.
+    @NotNull(message = "O tipo de problema é obrigatório")
     @Enumerated(EnumType.STRING)
-    @Column (nullable = false)
-    private String tipoProblema;
+    @Column(nullable = false)
+    private TipoProblema tipoProblema;
 
-
+    // O status será PENDENTE quando uma solicitação for criada.
     @Enumerated(EnumType.STRING)
-    @Column (nullable = false, length = 20)
+    @Column(nullable = false, length = 20)
     private StatusSolicitacao status = StatusSolicitacao.PENDENTE;
 
-/*===============
- * METODO CONSTRUTOR
- =================*/
-
+    // O JPA precisa de um construtor vazio.
     public Solicitacao() {
-
     }
-
-    /*===============
-     * GETTERS E SETTERS
-     =================*/
-
 
     public Long getId() {
         return id;
-    }
-
-    public StatusSolicitacao getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusSolicitacao status) {
-        this.status = status;
     }
 
     public void setId(Long id) {
@@ -115,59 +100,72 @@ public class Solicitacao {
         this.descricaoProblema = descricaoProblema;
     }
 
-    public String getTipoProblema() {
+    public TipoProblema getTipoProblema() {
         return tipoProblema;
     }
 
-    public void setTipoProblema(String tipoProblema) {
+    public void setTipoProblema(TipoProblema tipoProblema) {
         this.tipoProblema = tipoProblema;
     }
 
-	/*=============
-	 * METODOS
-	 ==============*/
+    public StatusSolicitacao getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusSolicitacao status) {
+        this.status = status;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if(this == o )
+        if (this == o) {
             return true;
-        if(o == null || getClass() != o.getClass())return false;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         Solicitacao that = (Solicitacao) o;
         return id != null && id.equals(that.id);
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Objects.hash(getClass());
     }
 
-    public enum TipoProblema{
+    public enum TipoProblema {
+
         INFORMATICA("Informática"),
         ELETRICA("Elétrica"),
         ZELADORIA("Zeladoria");
 
         private final String descricao;
 
-        TipoProblema(String descricao){
+        TipoProblema(String descricao) {
             this.descricao = descricao;
         }
+
         public String getDescricao() {
             return descricao;
         }
     }
-    public enum StatusSolicitacao{
+
+    public enum StatusSolicitacao {
+
         PENDENTE("Pendente"),
-        EM_ANDAMENTO("Em Andamento"),
-        CONCLUIDO("Concluido");
+        EM_ANDAMENTO("Em andamento"),
+        CONCLUIDO("Concluído");
 
         private final String descricao;
 
-        StatusSolicitacao(String descricao){
+        StatusSolicitacao(String descricao) {
             this.descricao = descricao;
         }
+
         public String getDescricao() {
             return descricao;
         }
     }
-
 }

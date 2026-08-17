@@ -1,10 +1,265 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Excluir Chamado — SENAI Suporte</title>
+
+    <meta
+            name="description"
+            content="Confirme a exclusão do chamado de suporte."
+    >
+
+    <link
+            rel="stylesheet"
+            th:href="@{/css/estilo.css}"
+    >
 </head>
+
 <body>
+
+<nav class="navbar">
+
+    <a
+            class="navbar-brand"
+            th:href="@{/painel}"
+    >
+        <div class="navbar-logo">
+            S
+        </div>
+
+        <div class="navbar-name">
+            <span>SENAI</span> Suporte
+            <small>Painel do Técnico</small>
+        </div>
+    </a>
+
+    <ul class="navbar-nav">
+
+        <li>
+            <a th:href="@{/painel}">
+                📋 Chamados
+            </a>
+        </li>
+
+        <li class="navbar-divider"></li>
+
+        <li>
+            <span class="navbar-user">
+
+                <span class="navbar-user-dot"></span>
+
+                <span sec:authentication="name">
+                    Técnico
+                </span>
+
+            </span>
+        </li>
+
+        <li>
+            <form
+                    th:action="@{/logout}"
+                    method="post"
+                    style="display: inline;"
+            >
+                <input
+                        type="hidden"
+                        th:name="${_csrf.parameterName}"
+                        th:value="${_csrf.token}"
+                >
+
+                <button
+                        type="submit"
+                        class="btn btn-ghost btn-sm"
+                >
+                    Sair 🚪
+                </button>
+            </form>
+        </li>
+
+    </ul>
+</nav>
+
+<div class="confirm-wrap anim-fade">
+
+    <div class="card confirm-card anim-fade-up">
+
+        <div
+                class="card-header"
+                style="border-bottom-color: var(--danger-bdr);"
+        >
+            <div class="card-header-left">
+
+                <div class="card-icon red">
+                    🗑️
+                </div>
+
+                <div>
+                    <div class="card-title">
+                        Confirmar Exclusão
+                    </div>
+
+                    <div class="card-subtitle">
+                        Esta ação não pode ser desfeita
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="confirm-body">
+
+            <div class="confirm-icon">
+                ⚠️
+            </div>
+
+            <h2>
+                Excluir este chamado?
+            </h2>
+
+            <p>
+                Você está prestes a excluir permanentemente o chamado
+
+                <strong th:text="'#' + ${solicitacao.id}">
+                    #1
+                </strong>
+
+                de
+
+                <strong th:text="${solicitacao.nomeSolicitante}">
+                    Solicitante
+                </strong>.
+
+                <br>
+
+                Esta ação
+                <strong>não poderá ser revertida</strong>.
+            </p>
+
+            <div
+                    style="
+                    background: var(--danger-bg);
+                    border: 1px solid var(--danger-bdr);
+                    border-radius: var(--r-sm);
+                    padding: 1rem 1.25rem;
+                    text-align: left;
+                    margin-bottom: 1.75rem;
+                    font-size: .875rem;
+                "
+            >
+                <div
+                        style="
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: .75rem;
+                    "
+                >
+
+                    <div>
+                        <div class="detail-label">
+                            Solicitante
+                        </div>
+
+                        <div
+                                class="detail-value"
+                                th:text="${solicitacao.nomeSolicitante}"
+                        >
+                            Nome
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="detail-label">
+                            Sala
+                        </div>
+
+                        <div
+                                class="detail-value"
+                                th:text="${solicitacao.numeroSala}"
+                        >
+                            101
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="detail-label">
+                            Tipo
+                        </div>
+
+                        <div
+                                class="detail-value"
+                                th:text="${solicitacao.tipoProblema.descricao}"
+                        >
+                            Tipo
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="detail-label">
+                            Status Atual
+                        </div>
+
+                        <div
+                                class="detail-value"
+                                th:text="${solicitacao.status.descricao}"
+                        >
+                            Status
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="confirm-actions">
+
+                <a
+                        th:href="@{/painel}"
+                        class="btn btn-ghost btn-lg"
+                        id="btn-cancelar-exclusao"
+                >
+                    ← Cancelar
+                </a>
+
+                <form
+                        th:action="@{/painel/excluir/{id}(id=${solicitacao.id})}"
+                        method="post"
+                        style="display: inline;"
+                >
+                    <input
+                            type="hidden"
+                            th:name="${_csrf.parameterName}"
+                            th:value="${_csrf.token}"
+                    >
+
+                    <button
+                            type="submit"
+                            class="btn btn-danger btn-lg"
+                            id="btn-confirmar-exclusao"
+                    >
+                        🗑️ Sim, excluir
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    <strong>SENAI</strong> Suporte &mdash;
+    Painel do Técnico &copy; 2026
+</footer>
 
 </body>
 </html>

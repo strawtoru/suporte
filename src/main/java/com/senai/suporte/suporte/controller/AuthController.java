@@ -1,22 +1,22 @@
 package com.senai.suporte.suporte.controller;
 
-import org.springframework.boot.context.properties.bind.BindResult;
+import com.senai.suporte.suporte.model.Tecnico;
+import com.senai.suporte.suporte.service.TecnicoService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.senai.suporte.suporte.model.Tecnico;
-import com.senai.suporte.suporte.service.TecnicoService;
-
 @Controller
 public class AuthController {
 
-    private final TecnicoService  tecnicoService;
+    private final TecnicoService tecnicoService;
 
     public AuthController(TecnicoService tecnicoService) {
         this.tecnicoService = tecnicoService;
@@ -35,19 +35,30 @@ public class AuthController {
 
     @PostMapping("/cadastro")
     public String cadastrar(
-            @Valid @ModelAttribute Tecnico tecnico,
+            @Valid @ModelAttribute("tecnico") Tecnico tecnico,
             BindingResult resultado,
             Model model,
             RedirectAttributes flash) {
-        if(resultado.hasErrors()) {
+
+        // Se os dados forem inválidos, retorna ao formulário.
+        if (resultado.hasErrors()) {
             return "cadastro";
         }
+
         try {
             tecnicoService.cadastrar(tecnico);
+
+            flash.addFlashAttribute(
+                    "sucesso",
+                    "Cadastro realizado com sucesso! Faça o login para continuar."
+            );
+
+            return "redirect:/login";
+
         } catch (Exception e) {
-            model.addAttribute("erro ", e.getMessage());
+            // Exibe o erro no próprio formulário.
+            model.addAttribute("erro", e.getMessage());
+            return "cadastro";
         }
-        flash.addFlashAttribute("Sucesso", "Cadastro realizado com sucesso! Faça o login para contrinuar");
-        return "redirect:/login";
     }
 }

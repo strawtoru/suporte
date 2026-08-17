@@ -1,11 +1,11 @@
 package com.senai.suporte.suporte.service;
 
-import java.util.List;
+import com.senai.suporte.suporte.model.Tecnico;
+import com.senai.suporte.suporte.repository.TecnicoRepository;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.senai.suporte.suporte.model.Tecnico;
-import com.senai.suporte.suporte.repository.TecnicoRepository;
 
 @Service
 public class TecnicoService {
@@ -13,27 +13,41 @@ public class TecnicoService {
     private final TecnicoRepository tecnicoRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public TecnicoService(TecnicoRepository tecnicoRepository, PasswordEncoder passwordEncoder) {
+    public TecnicoService(
+            TecnicoRepository tecnicoRepository,
+            PasswordEncoder passwordEncoder
+    ) {
         this.tecnicoRepository = tecnicoRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public Tecnico cadastrar(Tecnico tecnico) {
-        tecnico.setEmail(tecnico.getEmail().trim().toLowerCase());
 
-        if(tecnicoRepository.findByEmail(tecnico.getEmail()).isPresent()){
-            throw new IllegalStateException("Já existe um tecnico cadastrado com esse e-mail!!");
+        String email = tecnico.getEmail().trim().toLowerCase();
+        tecnico.setEmail(email);
+
+        if (tecnicoRepository.findByEmail(email).isPresent()) {
+            throw new IllegalStateException(
+                    "Já existe um técnico cadastrado com esse e-mail."
+            );
         }
 
-        tecnico.setSenha(passwordEncoder.encode(tecnico.getSenha()));
+        tecnico.setSenha(
+                passwordEncoder.encode(tecnico.getSenha())
+        );
 
         return tecnicoRepository.save(tecnico);
     }
 
     @Transactional(readOnly = true)
     public String nomePorEmail(String email) {
-        return tecnicoRepository.findByEmail(email)
+        if (email == null || email.isBlank()) {
+            return "";
+        }
+
+        return tecnicoRepository
+                .findByEmail(email.trim().toLowerCase())
                 .map(Tecnico::getNome)
                 .orElse("");
     }

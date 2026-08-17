@@ -2,45 +2,37 @@ package com.senai.suporte.suporte.model;
 
 import java.util.Objects;
 
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "painel tecnico")
-
+@Table(name = "painel_tecnico")
 public class PainelTecnico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Cada registro do painel está relacionado a uma solicitação.
     @OneToOne
-    @JoinColumn(name = "solicitacao_id", nullable = false, unique = true)
+    @JoinColumn(
+            name = "solicitacao_id",
+            nullable = false,
+            unique = true
+    )
     private Solicitacao solicitacao;
 
-    @NotBlank(message = "Nome do tecnico é obragatório")
+    @NotBlank(message = "Nome do técnico é obrigatório")
     @Column(nullable = false)
     private String tecnicoResponsavel;
 
     @Column(columnDefinition = "TEXT")
     private String observacoes;
 
-	/* ===================
-	 * metodo construtor
-	 =================*/
-
+    // O JPA precisa de um construtor vazio.
     public PainelTecnico() {
-
     }
 
-    /* ===================
-     * getters e setters
-     =================*/
     public Long getId() {
         return id;
     }
@@ -70,20 +62,20 @@ public class PainelTecnico {
     }
 
     public void setObservacoes(String observacoes) {
-        observacoes = observacoes;
+        // "this" garante que o atributo da classe receba o novo valor.
+        this.observacoes = observacoes;
     }
-
-    /*=============================================================
-     * EQUALS() E hashCode() - igualdade baseada no id (padrão jpa)
-     * =============================================================
-     */
 
     @Override
     public boolean equals(Object o) {
-        if(this == o)
+        if (this == o) {
             return true;
-        if(o == null || getClass()!= o.getClass())
+        }
+
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
+
         PainelTecnico that = (PainelTecnico) o;
         return id != null && id.equals(that.id);
     }
