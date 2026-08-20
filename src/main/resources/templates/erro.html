@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro — SENAI Suporte</title>
+    <meta name="description" content="Ocorreu um erro no sistema de suporte.">
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <a class="navbar-brand" th:href="@{/}">
+        <div class="navbar-logo">S</div>
+        <div class="navbar-name">
+            <span>SENAI</span> Suporte
+            <small>Sistema de Chamados</small>
+        </div>
+    </a>
+    <ul class="navbar-nav">
+        <li><a th:href="@{/}">← Voltar ao início</a></li>
+    </ul>
+</nav>
+
+<!-- ERRO CENTRALIZADO -->
+<div class="error-wrap anim-fade">
+    <div class="error-content anim-fade-up">
+
+        <div class="error-emoji">😕</div>
+        <div class="error-code">Ops</div>
+
+        <h2>Algo deu errado</h2>
+
+        <p th:if="${mensagemErro}" th:text="${mensagemErro}">
+            Ocorreu um erro inesperado. Por favor, tente novamente.
+        </p>
+        <p th:if="${!mensagemErro}">
+            Ocorreu um erro inesperado. Por favor, tente novamente ou entre em contato com o suporte.
+        </p>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a th:href="@{/}" class="btn btn-primary btn-lg" id="btn-home">
+                🏠 Voltar ao Início
+            </a>
+            <a th:href="@{/painel}" class="btn btn-ghost btn-lg" id="btn-painel">
+                📋 Ir ao Painel
+            </a>
+        </div>
+
+        <!-- Detalhe técnico (oculto por padrão, visível em desenvolvimento) -->
+        <details style="margin-top: 2rem; text-align: left; max-width: 400px; margin-inline: auto;" th:if="${mensagemErro}">
+            <summary style="cursor: pointer; color: var(--text-muted); font-size: .82rem;">
+                Ver detalhes técnicos
+            </summary>
+            <div style="
+                margin-top: .75rem;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: var(--r-sm);
+                padding: 1rem;
+                font-size: .8rem;
+                color: var(--text-muted);
+                font-family: monospace;
+                word-break: break-all;
+                line-height: 1.7;
+            " th:text="${mensagemErro}">
+                Mensagem de erro técnica aqui.
+            </div>
+        </details>
+
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <strong>SENAI</strong> Suporte &mdash; Sistema de Chamados Técnicos &copy; 2026
+</footer>
+
+</body>
+</html>

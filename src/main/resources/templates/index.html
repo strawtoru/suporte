@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SENAI Suporte — Página Inicial</title>
+
+    <meta
+            name="description"
+            content="Sistema de abertura de chamados de suporte técnico do SENAI."
+    >
+
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a class="navbar-brand" th:href="@{/}">
+        <div class="navbar-logo">S</div>
+
+        <div class="navbar-name">
+            <span>SENAI</span> Suporte
+            <small>Sistema de Chamados</small>
+        </div>
+    </a>
+
+    <ul class="navbar-nav">
+        <li>
+            <a th:href="@{/}" class="nav-active">
+                Início
+            </a>
+        </li>
+
+        <li>
+            <a th:href="@{/solicitacao}">
+                Abrir Chamado
+            </a>
+        </li>
+
+        <li class="navbar-divider"></li>
+
+        <li>
+            <a th:href="@{/login}">
+                Entrar como Técnico
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<section class="home-hero anim-fade">
+    <div class="home-hero-inner">
+
+        <h1>
+            Suporte Técnico <span>SENAI</span>
+        </h1>
+
+        <p>
+            Abra um chamado de suporte de forma rápida e acompanhe
+            o atendimento pela nossa equipe de técnicos especializados.
+        </p>
+
+        <div class="home-actions">
+            <a
+                    th:href="@{/solicitacao}"
+                    class="btn btn-white btn-lg"
+            >
+                📋 Abrir Chamado
+            </a>
+
+            <a
+                    th:href="@{/login}"
+                    class="btn btn-outline-white btn-lg"
+            >
+                🔐 Área do Técnico
+            </a>
+        </div>
+    </div>
+</section>
+
+<section style="background: var(--bg); flex: 1;">
+    <div class="home-features">
+
+        <div class="feature-card anim-fade-up delay-1">
+            <div class="feature-icon stat-icon red">💻</div>
+
+            <h3>Informática</h3>
+
+            <p>
+                Problemas com computadores, redes, softwares e periféricos.
+                Nossa equipe atende com agilidade.
+            </p>
+        </div>
+
+        <div class="feature-card anim-fade-up delay-2">
+            <div class="feature-icon stat-icon yellow">⚡</div>
+
+            <h3>Elétrica</h3>
+
+            <p>
+                Chamados para problemas elétricos nas instalações.
+                Segurança em primeiro lugar.
+            </p>
+        </div>
+
+        <div class="feature-card anim-fade-up delay-3">
+            <div class="feature-icon stat-icon green">🧹</div>
+
+            <h3>Zeladoria</h3>
+
+            <p>
+                Manutenção geral, limpeza e conservação das dependências.
+                Ambiente sempre em ordem.
+            </p>
+        </div>
+
+        <div class="feature-card anim-fade-up delay-4">
+            <div class="feature-icon stat-icon blue">📊</div>
+
+            <h3>Acompanhamento</h3>
+
+            <p>
+                Técnicos autenticados gerenciam e atualizam os chamados
+                em tempo real no painel.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <strong>SENAI</strong> Suporte &mdash;
+    Sistema de Chamados Técnicos &copy; 2026
+</footer>
+
+</body>
+</html>
